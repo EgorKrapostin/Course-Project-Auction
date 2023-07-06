@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 3
+      id: 10
       author: dev
       changes:
         - createTable:
@@ -18,3 +18,9 @@ databaseChangeLog:
               - column:
                   name: date
                   type: datetime
+              - column:
+                  name: lot_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_key_lot
+                    references: lot(id)

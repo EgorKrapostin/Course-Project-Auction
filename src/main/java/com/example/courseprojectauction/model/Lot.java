@@ -2,6 +2,8 @@ package com.example.courseprojectauction.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "lot")
 public class Lot {

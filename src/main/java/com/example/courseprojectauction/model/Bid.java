@@ -15,6 +15,8 @@ public class Bid {
     private String name;
     @Column(name = "date")
     private LocalDateTime localDateTime;
+    @ManyToOne
+    private Lot lot;
 
     public Bid() {
     }
@@ -42,5 +44,13 @@ public class Bid {
 
     public void setLocalDateTime(LocalDateTime localDateTime) {
         this.localDateTime = localDateTime;
+    }
+
+    public Lot getLot() {
+        return lot;
+    }
+
+    public void setLot(Lot lot) {
+        this.lot = lot;
     }
 }
