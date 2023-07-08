@@ -1,7 +1,6 @@
 package com.example.courseprojectauction.DTO;
 
 import com.example.courseprojectauction.model.Bid;
-import jakarta.persistence.Column;
 
 import java.time.LocalDateTime;
 

@@ -2,10 +2,6 @@ package com.example.courseprojectauction.DTO;
 
 import com.example.courseprojectauction.model.Lot;
 import com.example.courseprojectauction.model.Status;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 public class LotDTO {
 
@@ -37,6 +33,7 @@ public class LotDTO {
         lot.setDescription(this.getDescription());
         lot.setStartPrice(this.getStartPrice());
         lot.setBidPrice(this.getBidPrice());
+        lot.setStatus(Status.CREATED);
 
         return lot;
     }

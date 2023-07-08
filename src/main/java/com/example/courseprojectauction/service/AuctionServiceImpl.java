@@ -1,6 +1,7 @@
 package com.example.courseprojectauction.service;
 
 import com.example.courseprojectauction.DTO.BidDTO;
+import com.example.courseprojectauction.DTO.LotFullInfo;
 import com.example.courseprojectauction.model.Bid;
 import com.example.courseprojectauction.model.Lot;
 import com.example.courseprojectauction.model.Status;
@@ -54,9 +55,14 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public void makeBid(Bid bid, int id) {
         Lot lot = new Lot();
-        lot.setId(id);
-        bid.setLot(lot);
-        bidRepository.save(bid);
+        Optional<Lot> lotWithStatus = auctionRepository.findById(id);
+        if (!lotWithStatus.get().getStatus().equals(Status.STARTED)) {
+            throw new RuntimeException("Некорректный статус лота");
+        } else {
+            lot.setId(id);
+            bid.setLot(lot);
+            bidRepository.save(bid);
+        }
     }
 
     @Override
@@ -67,6 +73,12 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public Optional<BidDTO> getMostFrequent(int id) {
-        return Optional.ofNullable(BidDTO.fromBid(bidRepository.getMostFrequent(id)));
+        return Optional.ofNullable(
+                BidDTO.fromBid(bidRepository.getMostFrequent(id)));
+    }
+
+    @Override
+    public Optional<LotFullInfo> getLotFullInfoById(int id) {
+        return auctionRepository.getLotFullInfoById(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.courseprojectauction.repository;
 
+import com.example.courseprojectauction.DTO.LotFullInfo;
 import com.example.courseprojectauction.model.Bid;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,5 @@ public interface BidRepository extends JpaRepository<Bid,Integer> {
             "LIMIT 1",
             nativeQuery = true)
     Bid getMostFrequent(int id);
+
 }

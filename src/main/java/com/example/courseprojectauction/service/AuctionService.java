@@ -1,6 +1,7 @@
 package com.example.courseprojectauction.service;
 
 import com.example.courseprojectauction.DTO.BidDTO;
+import com.example.courseprojectauction.DTO.LotFullInfo;
 import com.example.courseprojectauction.model.Bid;
 import com.example.courseprojectauction.model.Lot;
 
@@ -19,4 +20,6 @@ public interface AuctionService {
     Optional<BidDTO> getFirtsBid(int id);
 
     Optional<BidDTO> getMostFrequent(int id);
+
+    Optional<LotFullInfo> getLotFullInfoById(int id);
 }

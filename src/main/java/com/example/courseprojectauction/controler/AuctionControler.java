@@ -1,6 +1,9 @@
 package com.example.courseprojectauction.controler;
 
 import com.example.courseprojectauction.DTO.BidDTO;
+import com.example.courseprojectauction.DTO.BidderNameDTO;
+import com.example.courseprojectauction.DTO.LotDTO;
+import com.example.courseprojectauction.DTO.LotFullInfo;
 import com.example.courseprojectauction.model.Bid;
 import com.example.courseprojectauction.model.Lot;
 import com.example.courseprojectauction.service.AuctionService;
@@ -19,8 +22,8 @@ public class AuctionControler {
     }
 
     @PostMapping("/create")
-    public void createLot(@RequestBody Lot lot) {
-        auctionService.createLot(lot);
+    public void createLot(@RequestBody LotDTO lot) {
+        auctionService.createLot(lot.fromDTO());
     }
 
     @PostMapping("/start/{id}")
@@ -34,9 +37,9 @@ public class AuctionControler {
     }
 
     @PostMapping("/bid/{id}")
-    public void makeBid(@RequestBody Bid bid,
+    public void makeBid(@RequestBody BidderNameDTO bid,
                         @PathVariable int id) {
-        auctionService.makeBid(bid,id);
+        auctionService.makeBid(bid.fromDTO(),id);
     }
 
     @GetMapping("/first/{id}")
@@ -49,5 +52,11 @@ public class AuctionControler {
     public Optional<BidDTO> getMostFrequent(@PathVariable int id) {
 
         return auctionService.getMostFrequent(id);
+    }
+
+    @GetMapping("/fullInfo/{id}")
+    public Optional<LotFullInfo> getLotFullInfoById(@PathVariable int id) {
+
+        return auctionService.getLotFullInfoById(id);
     }
 }
