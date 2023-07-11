@@ -7,8 +7,14 @@ import com.example.courseprojectauction.DTO.LotFullInfo;
 import com.example.courseprojectauction.model.Bid;
 import com.example.courseprojectauction.model.Lot;
 import com.example.courseprojectauction.service.AuctionService;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -39,7 +45,7 @@ public class AuctionControler {
     @PostMapping("/bid/{id}")
     public void makeBid(@RequestBody BidderNameDTO bid,
                         @PathVariable int id) {
-        auctionService.makeBid(bid.fromDTO(),id);
+        auctionService.makeBid(bid.fromDTO(), id);
     }
 
     @GetMapping("/first/{id}")
@@ -58,5 +64,24 @@ public class AuctionControler {
     public Optional<LotFullInfo> getLotFullInfoById(@PathVariable int id) {
 
         return auctionService.getLotFullInfoById(id);
+    }
+
+    @GetMapping("/lot")
+    public List<Lot> getLotsInPageFormat(@RequestParam(required = false,defaultValue = "0") int page,int status) {
+
+        return auctionService.getLotsInPageFormat(page,status);
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<Resource> getLotsInCSV() {
+
+        String name = "lots.csv";
+        String file = auctionService.getLotsInCSV().toString();
+        Resource resource = new ByteArrayResource(file.getBytes());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + name + "\"")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(resource);
     }
 }

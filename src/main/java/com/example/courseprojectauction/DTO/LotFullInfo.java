@@ -33,6 +33,19 @@ public class LotFullInfo {
         return lotFullInfo;
     }
 
+    public Lot fromDTO() {
+
+        Lot lot = new Lot();
+
+        lot.setTitle(this.getTitle());
+        lot.setDescription(this.getDescription());
+        lot.setStartPrice(this.getStartPrice());
+        lot.setBidPrice(this.getBidPrice());
+        lot.setStatus(Status.CREATED);
+
+        return lot;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -7,8 +7,10 @@ import com.example.courseprojectauction.model.Lot;
 import com.example.courseprojectauction.model.Status;
 import com.example.courseprojectauction.repository.AuctionRepository;
 import com.example.courseprojectauction.repository.BidRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,6 +81,30 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public Optional<LotFullInfo> getLotFullInfoById(int id) {
-        return auctionRepository.getLotFullInfoById(id);
+
+        LotFullInfo lotFullInfo = new LotFullInfo();
+        Optional<Lot> lot = auctionRepository.findById(id);
+        lotFullInfo.setId(lot.get().getId());
+        lotFullInfo.setStatus(lot.get().getStatus());
+        lotFullInfo.setTitle(lot.get().getTitle());
+        lotFullInfo.setDescription(lot.get().getDescription());
+        lotFullInfo.setStartPrice(lot.get().getStartPrice());
+        lotFullInfo.setBidPrice(lot.get().getBidPrice());
+        lotFullInfo.setCurrentPrice(lot.get().getStartPrice()+ (lotFullInfo.getBidPrice() * bidRepository.getNumberOfBids(id)));
+        lotFullInfo.setLastBid(BidDTO.fromBid(bidRepository.getLastBid(id)));
+        return Optional.of(lotFullInfo);
+    }
+
+    @Override
+    public List<Lot> getLotsInPageFormat(int page, int status) {
+        PageRequest.of(page, 10);
+        return auctionRepository.findAllByStatus(PageRequest.of(page, 10),status);
+    }
+
+    @Override
+    public List<Lot> getLotsInCSV() {
+        List<Lot> list = new ArrayList<>();
+        list = auctionRepository.findAll();
+        return list;
     }
 }

@@ -1,6 +1,5 @@
 package com.example.courseprojectauction.repository;
 
-import com.example.courseprojectauction.DTO.LotFullInfo;
 import com.example.courseprojectauction.model.Bid;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +22,15 @@ public interface BidRepository extends JpaRepository<Bid,Integer> {
             nativeQuery = true)
     Bid getMostFrequent(int id);
 
+    @Query(value = "select * from bid " +
+            "WHERE lot_id = :id " +
+            "order by date desc " +
+            "limit 1 ",
+            nativeQuery = true)
+    Bid getLastBid(int id);
+
+    @Query(value = "select count(lot_id) from bid " +
+            "where lot_id = :id",
+            nativeQuery = true)
+    Integer getNumberOfBids(int id);
 }

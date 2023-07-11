@@ -20,6 +20,16 @@ public class Lot {
     private Integer startPrice;
     @Column(name = "bid_price")
     private Integer bidPrice;
+    @OneToMany
+    private List<Bid> bids;
+
+    public List<Bid> getBids() {
+        return bids;
+    }
+
+    public void setBids(List<Bid> bids) {
+        this.bids = bids;
+    }
 
     public Lot() {
     }
@@ -71,5 +81,18 @@ public class Lot {
 
     public void setBidPrice(Integer bidPrice) {
         this.bidPrice = bidPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Lot{" +
+                "id=" + id +
+                ", status=" + status +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", startPrice=" + startPrice +
+                ", bidPrice=" + bidPrice +
+                ", bids=" + bids +
+                '}';
     }
 }

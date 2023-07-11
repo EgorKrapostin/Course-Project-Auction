@@ -22,4 +22,8 @@ public interface AuctionService {
     Optional<BidDTO> getMostFrequent(int id);
 
     Optional<LotFullInfo> getLotFullInfoById(int id);
+
+    List<Lot> getLotsInPageFormat(int page, int status);
+
+    List<Lot> getLotsInCSV();
 }
