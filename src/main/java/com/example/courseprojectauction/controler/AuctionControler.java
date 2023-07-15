@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,27 +73,35 @@ public class AuctionControler {
     }
 
     @GetMapping("/lot")
-    public List<Lot> getLotsInPageFormat(@RequestParam(required = false,defaultValue = "0") int page,int status) {
+    public List<Lot> getLotsInPageFormat(@RequestParam(required = false, defaultValue = "0") int page, int status) {
 
-        return auctionService.getLotsInPageFormat(page,status);
+        return auctionService.getLotsInPageFormat(page, status);
     }
 
     @GetMapping("/export")
     public ResponseEntity<Resource> getLotsInCSV() throws IOException {
 
+        StringWriter writer = new StringWriter();
+
         String name = "lots.csv";
-        String [] HEADERS = {"id","title","status","description","startPrice","bidPrice"};
-        FileWriter out = new FileWriter(name);
+        String[] HEADERS = {"id", "title", "status", "description", "startPrice", "bidPrice"};
 
-        final CSVPrinter csvPrinter = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(HEADERS));
+        CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
+                .setHeader(HEADERS)
+                .build();
 
-        try (csvPrinter){
+
+        try (final CSVPrinter printer = new CSVPrinter(writer, csvFormat)) {
             List<Lot> list = auctionService.getLotsInCSV();
             list.forEach(lot -> {
                 try {
-                    csvPrinter.printRecord(lot);
+                    printer.printRecord(lot);
+
+                    printer.flush();
+                    printer.close();
                 } catch (IOException e) {
-                   e.printStackTrace();
+                    e.printStackTrace();
+
                 }
             });
         }
