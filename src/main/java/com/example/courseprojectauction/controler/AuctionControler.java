@@ -7,6 +7,7 @@ import com.example.courseprojectauction.DTO.LotFullInfo;
 import com.example.courseprojectauction.model.Bid;
 import com.example.courseprojectauction.model.Lot;
 import com.example.courseprojectauction.service.AuctionService;
+import com.opencsv.CSVWriter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.core.io.ByteArrayResource;
@@ -17,10 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -84,53 +82,23 @@ public class AuctionControler {
     @GetMapping("/export")
     public ResponseEntity<Resource> getLotsInCSV() throws IOException {
 
-//        StringWriter writer = new StringWriter();
-//
-//        String name = "lots.csv";
-//        String[] HEADERS = {"id", "title", "status", "description", "startPrice", "bidPrice"};
-//
-//        CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
-//                .setHeader(HEADERS)
-//                .build();
-//
-//
-//        try (final CSVPrinter printer = new CSVPrinter(writer, csvFormat)) {
-//            List<Lot> list = auctionService.getLotsInCSV();
-//            list.forEach(lot -> {
-//                try {
-//                    printer.printRecord(lot);
-//
-//                    printer.flush();
-//                    printer.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//
-//                }
-//            });
-//        }
-//
-//        Resource resource = new PathResource(name);
-//
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + name + "\"")
-//                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-//                .body(resource);
-        List<Lot> list = auctionService.getLotsInCSV();
         String name = "lots.csv";
 
-        try {
-            Writer writer = Files.newBufferedWriter(Paths.get(name));
-            CSVPrinter printer = CSVFormat.DEFAULT
-                    .withHeader("id", "title", "status", "description", "startPrice", "bidPrice")
-                    .print(writer);
+        List<Lot> list = auctionService.getLotsInCSV();
 
-            printer.printRecord(list);
-            printer.flush();
-            printer.close();
+        BufferedWriter writer = Files.newBufferedWriter(Paths.get(name));
+        CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                .withHeader("id", "title", "status", "description", "startPrice", "bidPrice"));
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        list.forEach(lot -> {
+            try {
+                csvPrinter.printRecord(lot.getId(),lot.getTitle(),lot.getStatus(),lot.getDescription(),lot.getStartPrice(),lot.getBidPrice());
+                csvPrinter.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
 
         Resource resource = new PathResource(name);
 
